@@ -59,7 +59,7 @@ wandb_name:
 gradient_accumulation_steps: 1
 micro_batch_size: 16  # should match num_generations / num_gpus
 num_epochs: 1
-max_steps: 1000  # Full training run
+max_steps: 500  # Medium training run
 
 optimizer: adamw_torch_fused
 lr_scheduler: constant_with_warmup
