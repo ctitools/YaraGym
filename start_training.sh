@@ -23,7 +23,7 @@ echo "vLLM server PID: $VLLM_PID"
 
 # Wait for vLLM to start
 echo "Waiting for vLLM server to start..."
-sleep 30
+sleep 100
 
 # Check if vLLM is running
 if curl -s http://localhost:8000/health/ > /dev/null; then
