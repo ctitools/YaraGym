@@ -53,8 +53,8 @@ eval_sample_packing: false
 pad_to_sequence_len: false
 
 wandb_project: orion-yara-grpo
-wandb_entity:
-wandb_name:
+wandb_entity: # Set your W&B entity here
+wandb_name: Qwen3_1.7B_orion10k_grpo_lr1e6_sl800_stp500
 
 gradient_accumulation_steps: 1
 micro_batch_size: 16  # should match num_generations / num_gpus
