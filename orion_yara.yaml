@@ -1,0 +1,82 @@
+base_model: Qwen/Qwen3-1.7B
+# Automatically upload checkpoint and final model to HF
+# hub_model_id: username/orion-yara-model
+
+load_in_8bit: false
+load_in_4bit: false
+strict: false
+
+torch_compile: true
+
+# vLLM configuration for serving
+vllm:
+  host: 0.0.0.0
+  port: 8000
+  tensor_parallel_size: 1  # Use 1 GPU for vLLM
+  gpu_memory_utilization: 0.85  # Increased for memory allocation
+  dtype: auto
+  max_model_len: 800  # Reduced to fit in memory
+
+rl: grpo
+trl:
+  beta: 0.001
+  max_completion_length: 600  # Adjusted for memory
+  use_vllm: true
+  vllm_server_host: 0.0.0.0
+  vllm_server_port: 8000
+  vllm_server_timeout: 300
+  reward_funcs:
+    - orion_yara_grpo.yara_validity_reward_func
+    - orion_yara_grpo.yara_structure_reward_func
+    - orion_yara_grpo.yara_complexity_reward_func
+  num_generations: 16
+
+chat_template: qwen3
+datasets:
+  - path: ctitools/orion_10k
+    type: orion_yara_grpo.axo_orion_yara_transform
+dataset_prepared_path: /workspace/data/orion_yara_prepared
+skip_prepare_dataset: false
+debug_num_examples: 100  # Limit dataset for debugging
+val_set_size: 0.0
+output_dir: /workspace/data/axolotl-artifacts/orion-yara-outputs
+
+dataloader_prefetch_factor: 32
+dataloader_num_workers: 2
+dataloader_pin_memory: true
+
+gc_steps: 1
+
+sequence_len: 800  # Adjusted to match vLLM max_model_len
+sample_packing: false
+eval_sample_packing: false
+pad_to_sequence_len: false
+
+wandb_project: orion-yara-grpo
+wandb_entity:
+wandb_name:
+
+gradient_accumulation_steps: 1
+micro_batch_size: 16  # should match num_generations / num_gpus
+num_epochs: 1
+max_steps: 10  # Short test run
+
+optimizer: adamw_torch_fused
+lr_scheduler: constant_with_warmup
+learning_rate: 1.0e-6
+max_grad_norm: 1.0
+weight_decay: 0.1
+
+bf16: true
+tf32: true
+
+gradient_checkpointing: true
+gradient_checkpointing_kwargs:
+  use_reentrant: false
+flash_attention: true
+
+logging_steps: 1
+warmup_steps: 0
+evals_per_epoch: 0
+saves_per_epoch: 0
+save_strategy: "no"  # Don't save checkpoints for test
