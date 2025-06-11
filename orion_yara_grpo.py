@@ -68,8 +68,9 @@ def validate_yara_rule(rule_text: str) -> Tuple[bool, str]:
 def yara_validity_reward_func(
     prompts: List[str],
     completions: List[str],
-    labels: List[str],
+    labels: List[str] = None,
     context: Dict = None,
+    **kwargs  # Accept any additional arguments
 ) -> List[float]:
     """
     Reward function based on YARA rule validity.
@@ -80,8 +81,16 @@ def yara_validity_reward_func(
     rewards = []
     
     for completion in completions:
+        # Extract text from completion (may be a dict or list)
+        if isinstance(completion, list) and len(completion) > 0:
+            completion_text = completion[0].get('content', '') if isinstance(completion[0], dict) else str(completion[0])
+        elif isinstance(completion, dict):
+            completion_text = completion.get('content', '') or completion.get('text', '') or str(completion)
+        else:
+            completion_text = str(completion)
+        
         # Extract YARA rule from completion
-        rule_text = extract_yara_rule(completion)
+        rule_text = extract_yara_rule(completion_text)
         
         if not rule_text:
             rewards.append(0.0)
@@ -104,8 +113,9 @@ def yara_validity_reward_func(
 def yara_structure_reward_func(
     prompts: List[str],
     completions: List[str],
-    labels: List[str],
+    labels: List[str] = None,
     context: Dict = None,
+    **kwargs  # Accept any additional arguments
 ) -> List[float]:
     """
     Reward function for YARA rule structural completeness.
@@ -114,7 +124,15 @@ def yara_structure_reward_func(
     rewards = []
     
     for completion in completions:
-        rule_text = extract_yara_rule(completion)
+        # Extract text from completion (may be a dict or list)
+        if isinstance(completion, list) and len(completion) > 0:
+            completion_text = completion[0].get('content', '') if isinstance(completion[0], dict) else str(completion[0])
+        elif isinstance(completion, dict):
+            completion_text = completion.get('content', '') or completion.get('text', '') or str(completion)
+        else:
+            completion_text = str(completion)
+        
+        rule_text = extract_yara_rule(completion_text)
         if not rule_text:
             rewards.append(0.0)
             continue
@@ -145,8 +163,9 @@ def yara_structure_reward_func(
 def yara_complexity_reward_func(
     prompts: List[str],
     completions: List[str],
-    labels: List[str],
+    labels: List[str] = None,
     context: Dict = None,
+    **kwargs  # Accept any additional arguments
 ) -> List[float]:
     """
     Reward function for YARA rule complexity and quality.
@@ -155,7 +174,15 @@ def yara_complexity_reward_func(
     rewards = []
     
     for completion in completions:
-        rule_text = extract_yara_rule(completion)
+        # Extract text from completion (may be a dict or list)
+        if isinstance(completion, list) and len(completion) > 0:
+            completion_text = completion[0].get('content', '') if isinstance(completion[0], dict) else str(completion[0])
+        elif isinstance(completion, dict):
+            completion_text = completion.get('content', '') or completion.get('text', '') or str(completion)
+        else:
+            completion_text = str(completion)
+        
+        rule_text = extract_yara_rule(completion_text)
         if not rule_text:
             rewards.append(0.0)
             continue

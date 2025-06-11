@@ -37,7 +37,7 @@ datasets:
     type: orion_yara_grpo.axo_orion_yara_transform
 dataset_prepared_path: /workspace/data/orion_yara_prepared
 skip_prepare_dataset: false
-debug_num_examples: 100  # Limit dataset for debugging
+# debug_num_examples: 100  # Uncomment to limit dataset for debugging
 val_set_size: 0.0
 output_dir: /workspace/data/axolotl-artifacts/orion-yara-outputs
 
@@ -59,7 +59,7 @@ wandb_name:
 gradient_accumulation_steps: 1
 micro_batch_size: 16  # should match num_generations / num_gpus
 num_epochs: 1
-max_steps: 10  # Short test run
+max_steps: 1000  # Full training run
 
 optimizer: adamw_torch_fused
 lr_scheduler: constant_with_warmup
@@ -75,8 +75,9 @@ gradient_checkpointing_kwargs:
   use_reentrant: false
 flash_attention: true
 
-logging_steps: 1
-warmup_steps: 0
+logging_steps: 10
+warmup_steps: 100
 evals_per_epoch: 0
 saves_per_epoch: 0
-save_strategy: "no"  # Don't save checkpoints for test
+save_strategy: "steps"
+save_steps: 100
