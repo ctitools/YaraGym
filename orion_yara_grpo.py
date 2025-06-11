@@ -220,31 +220,14 @@ def axo_orion_yara_transform(cfg, *args, **kwargs):
         # Check if this is a YARA generation task
         input_text = sample.get("input", "")
         output_text = sample.get("output", "")
+             
+        return {
+            "prompt": [
+                {"role": "user", "content": input_text},
+            ],
+            "answer": output_text
+        }
         
-        # Check if this is a valid YARA generation task
-        is_yara_task = (
-            "generate a yara rule" in input_text.lower() and 
-            output_text and 
-            output_text.strip().startswith("rule ")
-        )
-        
-        if is_yara_task:
-            # Return actual YARA task
-            return {
-                "prompt": [
-                    {"role": "user", "content": input_text},
-                ],
-                "answer": output_text
-            }
-        else:
-            # Return a dummy sample that will get low rewards
-            # This avoids the empty list issue
-            return {
-                "prompt": [
-                    {"role": "user", "content": "Generate a YARA rule for detecting notepad.exe"},
-                ],
-                "answer": "I cannot generate YARA rules."
-            }
     
     return transform_fn, {"remove_columns": ["input", "output", "messages"]}
 

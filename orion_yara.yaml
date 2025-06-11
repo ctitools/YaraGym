@@ -33,7 +33,7 @@ trl:
 
 chat_template: qwen3
 datasets:
-  - path: ctitools/orion_10k
+  - path: ctitools/orion_10k_yara_only
     type: orion_yara_grpo.axo_orion_yara_transform
 dataset_prepared_path: /workspace/data/orion_yara_prepared
 skip_prepare_dataset: false
@@ -54,7 +54,7 @@ pad_to_sequence_len: false
 
 wandb_project: orion-yara-grpo
 wandb_entity: # Set your W&B entity here
-wandb_name: Qwen3_1.7B_orion10k_grpo_lr1e6_sl800_stp500
+wandb_name: Qwen3_1.7B_orion_10k_yara_only_grpo_lr1e6_sl800_stp500_v2
 
 gradient_accumulation_steps: 1
 micro_batch_size: 16  # should match num_generations / num_gpus
