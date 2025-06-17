@@ -15,21 +15,21 @@ vllm:
   tensor_parallel_size: 1  # Use 1 GPU for vLLM
   gpu_memory_utilization: 0.85  # Increased for memory allocation
   dtype: auto
-  max_model_len: 800  # Reduced to fit in memory
+  max_model_len: 4000  # Reduced to fit in memory
 
 rl: grpo
 trl:
   beta: 0.001
-  max_completion_length: 600  # Adjusted for memory
+  max_completion_length: 3900  # Adjusted for memory
   use_vllm: true
   vllm_server_host: 0.0.0.0
   vllm_server_port: 8000
-  vllm_server_timeout: 300
+  vllm_server_timeout: 600
   reward_funcs:
     - orion_yara_grpo.yara_validity_reward_func
     - orion_yara_grpo.yara_structure_reward_func
     - orion_yara_grpo.yara_complexity_reward_func
-  num_generations: 16
+  num_generations: 8
 
 chat_template: qwen3
 datasets:
@@ -47,19 +47,19 @@ dataloader_pin_memory: true
 
 gc_steps: 1
 
-sequence_len: 800  # Adjusted to match vLLM max_model_len
+sequence_len: 4000  # Adjusted to match vLLM max_model_len
 sample_packing: false
 eval_sample_packing: false
 pad_to_sequence_len: false
 
 wandb_project: orion-yara-grpo
 wandb_entity: # Set your W&B entity here
-wandb_name: Qwen3_1.7B_orion_10k_yara_only_grpo_lr1e6_sl800_stp500_v2
+wandb_name: Qwen3_1.7B_orion_10k_next_v1
 
 gradient_accumulation_steps: 1
-micro_batch_size: 16  # should match num_generations / num_gpus
+micro_batch_size: 8  # should match num_generations / num_gpus
 num_epochs: 1
-max_steps: 500  # Medium training run
+max_steps: 1000  # Medium training run
 
 optimizer: adamw_torch_fused
 lr_scheduler: constant_with_warmup

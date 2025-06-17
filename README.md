@@ -16,8 +16,9 @@ uv venv grpo_env
 source grpo_env/bin/activate
 
 # Install dependencies
-uv pip install "axolotl[vllm]"
+uv pip install "axolotl[vllm]==0.9.2"
 uv pip install --no-deps "trl @ git+https://github.com/huggingface/trl.git@main"
+MAX_JOBS=64 uv pip install flash-attn==2.7.4.post1 --no-build-isolation
 uv pip install yara-python
 ```
 
